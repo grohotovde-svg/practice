@@ -38,8 +38,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ci.nsu.moble.main.ui.theme.PracticeTheme
+import androidx.compose.ui.graphics.vector.ImageVector
 
-// TODO: crate sealed class with 3 routes (РЕАЛИЗОВАНО)
+// Data class для элементов навигации
+data class BottomNavItem(
+    val route: String,
+    val icon: ImageVector,
+    val label: String
+)
+
+// Sealed class для маршрутов
 sealed class Screen(val route: String) {
     object Home : Screen("home")
     object ScreenOne : Screen("screen_one")
@@ -61,9 +69,7 @@ class SecondActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SecondActivityScreen() {
-    // todo: create nav controller (РЕАЛИЗОВАНО)
     val navController = rememberNavController()
-
     var selectedItem by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
     var receivedText by remember { mutableStateOf("") }
@@ -73,72 +79,64 @@ fun SecondActivityScreen() {
         receivedText = context.intent.getStringExtra("text_data") ?: "No text received"
     }
 
-    Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        TopAppBar(
-            title = { Text(text = receivedText) },
-            navigationIcon = {
-                IconButton(onClick = {
-                    // TODO: create intent and start MainActivity (РЕАЛИЗОВАНО)
-                    if (context is Activity) {
-                        context.finish()
+    // Список элементов навигации
+    val navItems = listOf(
+        BottomNavItem(Screen.Home.route, Icons.Filled.Home, "Home"),
+        BottomNavItem(Screen.ScreenOne.route, Icons.Filled.List, "Screen One"),
+        BottomNavItem(Screen.ScreenTwo.route, Icons.Filled.Settings, "Screen Two")
+    )
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = { Text(text = receivedText) },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        if (context is Activity) {
+                            context.finish()
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.White
+                        )
                     }
-
-
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = Color.White
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Blue,
+                    titleContentColor = Color.White
+                )
+            )
+        },
+        bottomBar = {
+            NavigationBar {
+                navItems.forEachIndexed { index, item ->
+                    NavigationBarItem(
+                        icon = {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = item.label
+                            )
+                        },
+                        label = { Text(item.label) },
+                        selected = selectedItem == index,
+                        onClick = {
+                            selectedItem = index
+                            navController.navigate(item.route) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
                     )
                 }
-            }, colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.Blue, titleContentColor = Color.White
-            )
-        )
-    }, bottomBar = {
-        NavigationBar {
-            NavigationBarItem(
-                icon = { Icon(imageVector = Icons.Filled.Home, contentDescription = "Home") },
-                label = { Text("Home") },
-                selected = selectedItem == 0,
-                onClick = {
-                    selectedItem = 0
-                    // TODO: navigate to home screen by navController (РЕАЛИЗОВАНО)
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                })
-            NavigationBarItem(
-                icon = { Icon(imageVector = Icons.Filled.List, contentDescription = "Screen One") },
-                label = { Text("Screen One") },
-                selected = selectedItem == 1,
-                onClick = {
-                    selectedItem = 1
-                    // TODO: navigate to screen one (РЕАЛИЗОВАНО)
-                    navController.navigate(Screen.ScreenOne.route) {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                })
-            NavigationBarItem(
-                icon = { Icon(imageVector = Icons.Filled.Settings, contentDescription = "Screen Two") },
-                label = { Text("Screen Two") },
-                selected = selectedItem == 2,
-                onClick = {
-                    selectedItem = 2
-                    // TODO: navigate to screen two (РЕАЛИЗОВАНО)
-                    navController.navigate(Screen.ScreenTwo.route) {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                })
+            }
         }
-    }) { innerPadding ->
-        // TODO: create a nav graph with 3 screens (РЕАЛИЗОВАНО)
+    ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = Screen.Home.route,
