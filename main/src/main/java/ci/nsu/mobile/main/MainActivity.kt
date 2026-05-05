@@ -1,6 +1,7 @@
 package ci.nsu.mobile.main
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -26,10 +27,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,10 +50,18 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
+
 @Composable
 fun ShoppingScreen(viewModel: ShoppingViewModel) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
+    LaunchedEffect(Unit) {
+        viewModel.toastMessages.collect { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
     Surface(
         modifier = Modifier
             .fillMaxSize()
