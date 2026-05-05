@@ -17,10 +17,18 @@ class ShoppingViewModel : ViewModel() {
 
     fun addItem() {
         val currentText = _uiState.value.newItemText
+        for (item in _uiState.value.items)
+        {
+            if (currentText.lowercase().trim() == item.name.lowercase().trim()){
+
+                return
+            }
+
+        }
         if (currentText.isNotBlank()) {
             _uiState.update { currentState ->
                 val newItem = ShoppingItem(
-                    // новый id = максимальный существующий + 1
+
                     id = (currentState.items.maxOfOrNull { it.id } ?: 0) + 1,
                     name = currentText
                 )

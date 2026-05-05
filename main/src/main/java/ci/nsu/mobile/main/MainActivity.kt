@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -51,7 +52,9 @@ fun ShoppingScreen(viewModel: ShoppingViewModel) {
     val uiState by viewModel.uiState.collectAsState()
 
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .systemBarsPadding(),
         color = MaterialTheme.colorScheme.background
     ) {
         Column(
@@ -59,7 +62,7 @@ fun ShoppingScreen(viewModel: ShoppingViewModel) {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // поле ввода + кнопка "Добавить"
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -81,7 +84,6 @@ fun ShoppingScreen(viewModel: ShoppingViewModel) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // список покупок
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
