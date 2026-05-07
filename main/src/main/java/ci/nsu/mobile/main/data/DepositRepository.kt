@@ -11,4 +11,9 @@ class DepositRepository(private val dao: DepositDao) {
     suspend fun insert(deposit: Deposit) {
         dao.insert(deposit)
     }
+
+    // НОВОЕ:
+    suspend fun deleteAll() {
+        dao.deleteAll()
+    }
 }

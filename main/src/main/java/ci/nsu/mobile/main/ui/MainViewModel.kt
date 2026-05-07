@@ -35,4 +35,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun getDepositById(id: Int): Flow<Deposit?> = repository.getDepositById(id)
+
+    // НОВОЕ:
+    fun clearHistory() {
+        viewModelScope.launch {
+            repository.deleteAll()
+        }
+    }
 }

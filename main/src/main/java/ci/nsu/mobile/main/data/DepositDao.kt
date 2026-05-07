@@ -16,4 +16,8 @@ interface DepositDao {
 
     @Query("SELECT * FROM deposits WHERE id = :id LIMIT 1")
     fun getDepositById(id: Int): Flow<Deposit?>
+
+    // ДОБАВЬ ЭТО:
+    @Query("DELETE FROM deposits")
+    suspend fun deleteAll()
 }
