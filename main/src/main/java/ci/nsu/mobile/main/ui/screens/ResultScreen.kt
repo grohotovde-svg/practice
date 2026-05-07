@@ -100,8 +100,7 @@ fun ResultScreen(
             ) {
                 Button(
                     onClick = {
-                        // Сначала решаем, что делать и какой текст показать
-                        val msg = if (!isSaved) {
+                        if (!isSaved) {
                             val df = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
                             val deposit = Deposit(
                                 startAmount = startAmount,
@@ -113,21 +112,23 @@ fun ResultScreen(
                                 dateTime = df.format(Date())
                             )
                             viewModel.saveDeposit(deposit)
-                            isSaved = true
-                            "Расчёт сохранён!"
-                        } else {
-                            "Расчёт уже сохранён!"
+                            isSaved = true            // после этого кнопка станет неактивной
                         }
 
-                        // Показ snackbar в корутине
+                        val msg = if (isSaved) "Расчёт сохранён!" else "Ошибка сохранения"
                         coroutineScope.launch {
                             snackbarHostState.showSnackbar(msg)
                         }
                     },
+                    enabled = !isSaved,               // ← ключевая строка
                     modifier = Modifier
                         .weight(1f)
                         .height(56.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF388E3C))
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF388E3C),
+                        disabledContainerColor = Color(0xFF9E9E9E), // цвет, когда выключена
+                        disabledContentColor = Color.White
+                    )
                 ) {
                     Text("Сохранить")
                 }
