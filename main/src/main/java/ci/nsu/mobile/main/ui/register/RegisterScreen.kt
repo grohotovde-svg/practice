@@ -1,5 +1,9 @@
 package ci.nsu.mobile.main.ui.register
 
+import android.app.DatePickerDialog
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
@@ -10,11 +14,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import ci.nsu.mobile.main.data.models.GroupDto
 import ci.nsu.mobile.main.data.models.PersonDto
 import ci.nsu.mobile.main.data.models.RegisterRequest
-import kotlinx.coroutines.flow.collectLatest
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,8 +28,8 @@ fun RegisterScreen(
     onRegistrationSuccess: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
-    // поля формы (упрощённо)
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var middleName by remember { mutableStateOf("") }
@@ -85,14 +90,41 @@ fun RegisterScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
+
+                // Дата рождения — нажатие на Box открывает DatePickerDialog
                 item {
+                    val interactionSource = remember { MutableInteractionSource() }
+
+                    // перехватываем нажатие
+                    val isPressed by interactionSource.collectIsPressedAsState()
+
+                    if (isPressed) {
+                        val calendar = Calendar.getInstance()
+                        val year = calendar.get(Calendar.YEAR)
+                        val month = calendar.get(Calendar.MONTH)
+                        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+                        DatePickerDialog(
+                            context,
+                            { _, y, m, d ->
+                                val mm = (m + 1).toString().padStart(2, '0')
+                                val dd = d.toString().padStart(2, '0')
+                                birthDate = "$y-$mm-$dd"
+                            },
+                            year, month, day
+                        ).show()
+                    }
+
                     OutlinedTextField(
                         value = birthDate,
-                        onValueChange = { birthDate = it },
+                        onValueChange = { },
                         label = { Text("Дата рождения (YYYY-MM-DD)") },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        readOnly = true,
+                        interactionSource = interactionSource
                     )
                 }
+
                 item {
                     OutlinedTextField(
                         value = gender,
@@ -137,7 +169,6 @@ fun RegisterScreen(
                     }
                 }
 
-                // Логин/пароль/email/телефон
                 item {
                     OutlinedTextField(
                         value = login,
