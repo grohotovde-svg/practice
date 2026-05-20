@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
         val authRepository = AuthRepository(apiService)
 
         setContent {
-            // можешь подключить свою тему, пока базовую Material3
+
             androidx.compose.material3.MaterialTheme {
                 val navController = rememberNavController()
 
@@ -58,6 +58,9 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate("login") {
                                     popUpTo("login") { inclusive = true }
                                 }
+                            },
+                            onNavigateBack = {
+                                navController.popBackStack()
                             }
                         )
                     }

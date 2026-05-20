@@ -1,16 +1,13 @@
 package ci.nsu.mobile.main.ui.register
 
 import android.app.DatePickerDialog
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +22,8 @@ import java.util.Calendar
 @Composable
 fun RegisterScreen(
     viewModel: RegisterViewModel,
-    onRegistrationSuccess: () -> Unit
+    onRegistrationSuccess: () -> Unit,
+    onNavigateBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -48,7 +46,19 @@ fun RegisterScreen(
     }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Регистрация") }) }
+        topBar = {
+            TopAppBar(
+                title = { Text("Регистрация") },
+                navigationIcon = {
+                    IconButton(onClick = { onNavigateBack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Назад"
+                        )
+                    }
+                }
+            )
+        }
     ) { padding ->
         if (uiState.isLoading) {
             Box(
@@ -91,11 +101,9 @@ fun RegisterScreen(
                     )
                 }
 
-                // Дата рождения — нажатие на Box открывает DatePickerDialog
+                // Дата рождения через DatePickerDialog
                 item {
                     val interactionSource = remember { MutableInteractionSource() }
-
-                    // перехватываем нажатие
                     val isPressed by interactionSource.collectIsPressedAsState()
 
                     if (isPressed) {
@@ -125,7 +133,7 @@ fun RegisterScreen(
                     )
                 }
 
-                // Пол
+                // Пол — выпадающий список
                 item {
                     var genderExpanded by remember { mutableStateOf(false) }
                     val genderOptions = listOf("MALE", "FEMALE")
@@ -163,7 +171,7 @@ fun RegisterScreen(
                     }
                 }
 
-                // Группа
+                // Группа — выпадающий список
                 item {
                     ExposedDropdownMenuBox(
                         expanded = expanded,
@@ -259,7 +267,10 @@ fun RegisterScreen(
 
                 uiState.error?.let { error ->
                     item {
-                        Text(error, color = MaterialTheme.colorScheme.error)
+                        Text(
+                            text = error,
+                            color = MaterialTheme.colorScheme.error
+                        )
                     }
                 }
             }
