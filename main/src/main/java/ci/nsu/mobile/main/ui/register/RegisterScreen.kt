@@ -125,13 +125,42 @@ fun RegisterScreen(
                     )
                 }
 
+                // Пол
                 item {
-                    OutlinedTextField(
-                        value = gender,
-                        onValueChange = { gender = it },
-                        label = { Text("Пол (MALE/FEMALE)") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    var genderExpanded by remember { mutableStateOf(false) }
+                    val genderOptions = listOf("MALE", "FEMALE")
+
+                    ExposedDropdownMenuBox(
+                        expanded = genderExpanded,
+                        onExpandedChange = { genderExpanded = !genderExpanded }
+                    ) {
+                        OutlinedTextField(
+                            value = gender.ifBlank { "Выберите пол" },
+                            onValueChange = {},
+                            readOnly = true,
+                            label = { Text("Пол") },
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(genderExpanded)
+                            },
+                            modifier = Modifier
+                                .menuAnchor()
+                                .fillMaxWidth()
+                        )
+                        ExposedDropdownMenu(
+                            expanded = genderExpanded,
+                            onDismissRequest = { genderExpanded = false }
+                        ) {
+                            genderOptions.forEach { option ->
+                                DropdownMenuItem(
+                                    text = { Text(option) },
+                                    onClick = {
+                                        gender = option
+                                        genderExpanded = false
+                                    }
+                                )
+                            }
+                        }
+                    }
                 }
 
                 // Группа
