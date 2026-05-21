@@ -126,7 +126,7 @@ fun RegisterScreen(
                     OutlinedTextField(
                         value = birthDate,
                         onValueChange = { },
-                        label = { Text("Дата рождения (YYYY-MM-DD)") },
+                        label = { Text("Дата рождения") },
                         modifier = Modifier.fillMaxWidth(),
                         readOnly = true,
                         interactionSource = interactionSource
@@ -136,7 +136,7 @@ fun RegisterScreen(
                 // Пол — выпадающий список
                 item {
                     var genderExpanded by remember { mutableStateOf(false) }
-                    val genderOptions = listOf("MALE", "FEMALE")
+                    val genderOptions = listOf("Мужской", "Женский")
 
                     ExposedDropdownMenuBox(
                         expanded = genderExpanded,
