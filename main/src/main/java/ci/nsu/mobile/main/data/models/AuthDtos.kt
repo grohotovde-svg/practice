@@ -1,6 +1,7 @@
 // ВАЖНО! Убедитесь, что строка package правильная!
 package ci.nsu.mobile.main.data.models
 
+import android.R
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -42,8 +43,8 @@ data class LoginRequest(
 
 @Serializable
 data class LoginResponse(
-    val token: String,
-    val user: UserDto
+    val token: String
+ //   val user: UserDto?
 )
 
 @Serializable
@@ -52,7 +53,12 @@ data class UserDto(
     val id: Int,
     val login: String,
     val email: String,
-    val person: PersonInfo
+    val phoneNumber: String?,
+    val roleId: Int,
+    val authAllowed: Boolean,
+    val personId: Int,
+    val createdDate: String,
+    val lastLoginDate: String?
 )
 
 @Serializable

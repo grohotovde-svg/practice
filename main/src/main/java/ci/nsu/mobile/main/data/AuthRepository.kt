@@ -15,11 +15,11 @@ class AuthRepository(private val apiService: ApiService) {
         }
     }
 
-    suspend fun login(login: String, password: String): Result<UserDto> {
+    suspend fun login(login: String, password: String): Result<UserDto?> {
         return try {
             val response = apiService.login(LoginRequest(login, password))
             TokenManager.token = response.token
-            Result.success(response.user)
+            Result.success(null)
         } catch (e: Exception) {
             Result.failure(e)
         }
