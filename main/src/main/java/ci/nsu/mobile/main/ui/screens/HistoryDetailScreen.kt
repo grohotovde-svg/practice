@@ -11,13 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ci.nsu.mobile.main.ui.MainViewModel
+import ci.nsu.mobile.main.ui.DepositViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryDetailScreen(
     id: Int,
-    viewModel: MainViewModel,
+    viewModel: DepositViewModel,
     onBackClick: () -> Unit
 ) {
     val depositState = viewModel.getDepositById(id).collectAsState(initial = null)

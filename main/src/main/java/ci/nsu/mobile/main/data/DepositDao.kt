@@ -7,17 +7,17 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DepositDao {
-
     @Insert
     suspend fun insert(deposit: Deposit)
 
-    @Query("SELECT * FROM deposits ORDER BY id DESC")
-    fun getAllDeposits(): Flow<List<Deposit>>
+    // Ищем только расчеты текущего пользователя!
+    @Query("SELECT * FROM deposits WHERE userId = :userId ORDER BY id DESC")
+    fun getDepositsByUser(userId: Int): Flow<List<Deposit>>
 
     @Query("SELECT * FROM deposits WHERE id = :id LIMIT 1")
     fun getDepositById(id: Int): Flow<Deposit?>
 
-    // ДОБАВЬ ЭТО:
-    @Query("DELETE FROM deposits")
-    suspend fun deleteAll()
+    // Удаляем только историю текущего пользователя
+    @Query("DELETE FROM deposits WHERE userId = :userId")
+    suspend fun clearHistoryByUser(userId: Int)
 }

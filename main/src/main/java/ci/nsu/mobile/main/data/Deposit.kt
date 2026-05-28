@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class Deposit(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    val userId: Int, // <-- НОВОЕ ПОЛЕ: ID пользователя
     val startAmount: Double,
     val months: Int,
     val rate: Double,

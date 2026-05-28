@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ci.nsu.mobile.main.data.Deposit
-import ci.nsu.mobile.main.ui.MainViewModel
+import ci.nsu.mobile.main.ui.DepositViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.pow
@@ -21,7 +21,7 @@ fun ResultScreen(
     months: Int,
     rate: Double,
     monthlyAddition: Double,
-    viewModel: MainViewModel,
+    viewModel: DepositViewModel,
     onHomeClick: () -> Unit
 ) {
     val monthlyRate = rate / 100.0 / 12.0
@@ -38,7 +38,7 @@ fun ResultScreen(
 
     var isSaved by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()   // ← для запуска корутин из onClick
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -103,6 +103,7 @@ fun ResultScreen(
                         if (!isSaved) {
                             val df = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
                             val deposit = Deposit(
+                                userId = 0, // <-- ВОТ ЭТА СТРОЧКА ИСПРАВЛЕНА
                                 startAmount = startAmount,
                                 months = months,
                                 rate = rate,
@@ -112,7 +113,7 @@ fun ResultScreen(
                                 dateTime = df.format(Date())
                             )
                             viewModel.saveDeposit(deposit)
-                            isSaved = true            // после этого кнопка станет неактивной
+                            isSaved = true
                         }
 
                         val msg = if (isSaved) "Расчёт сохранён!" else "Ошибка сохранения"
@@ -120,13 +121,13 @@ fun ResultScreen(
                             snackbarHostState.showSnackbar(msg)
                         }
                     },
-                    enabled = !isSaved,               // ← ключевая строка
+                    enabled = !isSaved,
                     modifier = Modifier
                         .weight(1f)
                         .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF388E3C),
-                        disabledContainerColor = Color(0xFF9E9E9E), // цвет, когда выключена
+                        disabledContainerColor = Color(0xFF9E9E9E),
                         disabledContentColor = Color.White
                     )
                 ) {

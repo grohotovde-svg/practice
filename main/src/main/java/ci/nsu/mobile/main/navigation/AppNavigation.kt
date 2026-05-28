@@ -7,13 +7,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import ci.nsu.mobile.main.ui.MainViewModel
+import ci.nsu.mobile.main.ui.DepositViewModel
 import ci.nsu.mobile.main.ui.screens.*
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    val viewModel: MainViewModel = viewModel()
+    val viewModel: DepositViewModel = viewModel()
 
     NavHost(
         navController = navController,

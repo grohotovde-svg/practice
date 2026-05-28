@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 class DepositRepository(private val dao: DepositDao) {
 
-    val allDeposits: Flow<List<Deposit>> = dao.getAllDeposits()
+    fun getDepositsByUser(userId: Int): Flow<List<Deposit>> = dao.getDepositsByUser(userId)
 
     fun getDepositById(id: Int): Flow<Deposit?> = dao.getDepositById(id)
 
@@ -12,8 +12,7 @@ class DepositRepository(private val dao: DepositDao) {
         dao.insert(deposit)
     }
 
-    // НОВОЕ:
-    suspend fun deleteAll() {
-        dao.deleteAll()
+    suspend fun clearHistoryByUser(userId: Int) {
+        dao.clearHistoryByUser(userId)
     }
 }

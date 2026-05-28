@@ -16,16 +16,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ci.nsu.mobile.main.data.Deposit
-import ci.nsu.mobile.main.ui.MainViewModel
+import ci.nsu.mobile.main.ui.DepositViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
-    viewModel: MainViewModel,
+    viewModel: DepositViewModel,
     onBackClick: () -> Unit,
     onItemClick: (Deposit) -> Unit
 ) {
-    val deposits by viewModel.allDeposits.collectAsState()
+    val deposits by viewModel.userDeposits.collectAsState()
+
 
     // состояние для диалога подтверждения
     var showClearDialog by remember { mutableStateOf(false) }
