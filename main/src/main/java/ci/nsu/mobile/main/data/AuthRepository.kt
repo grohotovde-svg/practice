@@ -1,8 +1,7 @@
-// ВАЖНО! Убедитесь, что строка package правильная!
 package ci.nsu.mobile.main.data
 
-import ci.nsu.mobile.main.data.models.* // <-- Импорт DTO
-import ci.nsu.mobile.main.data.network.ApiService // <-- Импорт ApiService
+import ci.nsu.mobile.main.data.models.*
+import ci.nsu.mobile.main.data.network.ApiService // <-- Убедитесь, что импорт правильный
 
 class AuthRepository(private val apiService: ApiService) {
 
@@ -19,7 +18,7 @@ class AuthRepository(private val apiService: ApiService) {
         return try {
             val response = apiService.login(LoginRequest(login, password))
             TokenManager.token = response.token
-            Result.success(null)
+            Result.success(null) // Здесь был null, возможно, вы хотите вернуть UserDto?
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -38,6 +37,16 @@ class AuthRepository(private val apiService: ApiService) {
         return try {
             val groups = apiService.getGroups()
             Result.success(groups)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    // НОВЫЙ МЕТОД: Получение пользователя по ID
+    suspend fun getUserById(userId: Int): Result<UserDto> {
+        return try {
+            val user = apiService.getUserById(userId)
+            Result.success(user)
         } catch (e: Exception) {
             Result.failure(e)
         }

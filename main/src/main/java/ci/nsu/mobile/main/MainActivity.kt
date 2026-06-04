@@ -18,6 +18,8 @@ import ci.nsu.mobile.main.ui.register.RegisterViewModel
 import ci.nsu.mobile.main.ui.screens.HistoryDetailScreen
 import ci.nsu.mobile.main.ui.screens.ResultScreen
 import ci.nsu.mobile.main.ui.screens.Step2Screen
+import ci.nsu.mobile.main.ui.userdetail.UserDetailsScreen // НОВЫЙ ИМПОРТ
+// import ci.nsu.mobile.main.ui.userdetail.UserDetailsViewModel // ViewModel не нужна здесь напрямую
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +78,9 @@ class MainActivity : ComponentActivity() {
                             },
                             onNavigateToHistoryDetail = { id ->
                                 mainNavController.navigate("history_detail/$id")
+                            },
+                            onNavigateToUserDetails = { userId -> // НОВЫЙ ПАРАМЕТР ДЛЯ НАВИГАЦИИ К ДЕТАЛЯМ ПОЛЬЗОВАТЕЛЯ
+                                mainNavController.navigate("user_details/$userId")
                             }
                         )
                     }
@@ -132,6 +137,19 @@ class MainActivity : ComponentActivity() {
                         HistoryDetailScreen(
                             id = backStackEntry.arguments?.getInt("id") ?: 0,
                             viewModel = depositVm,
+                            onBackClick = { mainNavController.popBackStack() }
+                        )
+                    }
+
+                    // НОВЫЙ МАРШРУТ: Детали пользователя
+                    composable(
+                        route = "user_details/{userId}",
+                        arguments = listOf(navArgument("userId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val userId = backStackEntry.arguments?.getInt("userId") ?: -1
+                        UserDetailsScreen(
+                            userId = userId,
+                            factory = factory, // Передаем factory
                             onBackClick = { mainNavController.popBackStack() }
                         )
                     }

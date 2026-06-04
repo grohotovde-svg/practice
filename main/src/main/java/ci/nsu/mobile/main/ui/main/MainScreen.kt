@@ -1,5 +1,6 @@
 package ci.nsu.mobile.main.ui.main
 
+import androidx.compose.foundation.clickable // НОВЫЙ ИМПОРТ
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,7 +14,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun MainScreen(
     viewModel: MainViewModel,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onUserClick: (Int) -> Unit // НОВЫЙ ПАРАМЕТР: обработчик клика по пользователю
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -48,7 +50,12 @@ fun MainScreen(
                     .fillMaxSize()
             ) {
                 items(uiState.users) { user ->
-                    Column(modifier = Modifier.padding(16.dp)) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth() // Важно, чтобы вся ширина была кликабельной
+                            .clickable { onUserClick(user.id) } // ДОБАВЛЕНИЕ ОБРАБОТЧИКА КЛИКА
+                            .padding(16.dp)
+                    ) {
                         Text(user.login, style = MaterialTheme.typography.bodyLarge)
                         Text(user.email, style = MaterialTheme.typography.bodyMedium)
                     }

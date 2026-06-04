@@ -3,10 +3,11 @@ package ci.nsu.mobile.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import ci.nsu.mobile.main.di.ServiceLocator
-import ci.nsu.mobile.main.ui.DepositViewModel // <-- ИМПОРТ НОВОЙ ВЬЮМОДЕЛИ
+import ci.nsu.mobile.main.ui.DepositViewModel
 import ci.nsu.mobile.main.ui.login.LoginViewModel
 import ci.nsu.mobile.main.ui.main.MainViewModel
 import ci.nsu.mobile.main.ui.register.RegisterViewModel
+import ci.nsu.mobile.main.ui.userdetail.UserDetailsViewModel // НОВЫЙ ИМПОРТ
 
 class AppViewModelFactory(
     private val serviceLocator: ServiceLocator
@@ -24,9 +25,12 @@ class AppViewModelFactory(
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
                 MainViewModel(serviceLocator.authRepository) as T
             }
-            // ДОБАВЛЯЕМ ВЬЮМОДЕЛЬ ДЛЯ РАСЧЕТОВ!
             modelClass.isAssignableFrom(DepositViewModel::class.java) -> {
                 DepositViewModel(serviceLocator.depositRepository) as T
+            }
+            // НОВЫЙ ENTRY: UserDetailsViewModel
+            modelClass.isAssignableFrom(UserDetailsViewModel::class.java) -> {
+                UserDetailsViewModel(serviceLocator.authRepository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

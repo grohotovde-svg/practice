@@ -22,7 +22,8 @@ fun HomeContainerScreen(
     factory: AppViewModelFactory,
     onLogout: () -> Unit,
     onNavigateToResult: (Double, Int) -> Unit,
-    onNavigateToHistoryDetail: (Int) -> Unit
+    onNavigateToHistoryDetail: (Int) -> Unit,
+    onNavigateToUserDetails: (Int) -> Unit // НОВЫЙ ПАРАМЕТР
 ) {
     val bottomNavController = rememberNavController()
 
@@ -65,7 +66,11 @@ fun HomeContainerScreen(
             // Вкладка 1: Список пользователей
             composable(BottomNavItem.Users.route) {
                 val mainVm: MainViewModel = viewModel(factory = factory)
-                MainScreen(viewModel = mainVm, onLogout = onLogout)
+                MainScreen(
+                    viewModel = mainVm,
+                    onLogout = onLogout,
+                    onUserClick = onNavigateToUserDetails // ПЕРЕДАЕМ ОБРАБОТЧИК ДАЛЬШЕ
+                )
             }
 
             // Вкладка 2: Новый расчет (Шаг 1 калькулятора)
